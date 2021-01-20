@@ -1,5 +1,6 @@
 package couponSystem.loginManager;
 
+
 import couponSystem.exceptions.CouponSystemException;
 import couponSystem.facades.AdminFacade;
 import couponSystem.facades.ClientFacade;
@@ -21,7 +22,7 @@ public class LoginManager {
 
 		LoginManager loginManager = LoginManager.getLoginManagerInstance();
 
-		CompanyFacade companyFacade = (CompanyFacade) loginManager.login("company134@gmail.com", "company3",
+		CompanyFacade companyFacade = (CompanyFacade) loginManager.login("company3@gmail.com", "company3",
 				ClientType.COMPANY);
 		if (companyFacade != null) {
 			try {
