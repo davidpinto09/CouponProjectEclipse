@@ -11,82 +11,81 @@ import couponSystem.jdbc.dao.classes.CustomersDBDAO;
 
 public class LoginManager {
 
+	public static LoginManager loginManagerInstance = null;
 
-    public static LoginManager loginManagerInstance = null;
+	private LoginManager() {
 
-    private LoginManager() {
+	}
 
-    }
+	public static void main(String[] args) {
 
-    public static void main(String[] args) {
+		LoginManager loginManager = LoginManager.getLoginManagerInstance();
 
+		CompanyFacade companyFacade = (CompanyFacade) loginManager.login("company134@gmail.com", "company3",
+				ClientType.COMPANY);
+		if (companyFacade != null) {
+			try {
+				System.out.println(companyFacade.getCompanyDetails());
+			} catch (CouponSystemException daoException) {
+				daoException.printStackTrace();
+			}
+		} else {
+			System.out.println("Login not success");
+		}
+	}
 
-        LoginManager loginManager = LoginManager.getLoginManagerInstance();
+	public static LoginManager getLoginManagerInstance() {
+		if (loginManagerInstance == null) {
+			loginManagerInstance = new LoginManager();
+		}
+		return loginManagerInstance;
+	}
 
+	public ClientFacade login(String email, String password, ClientType clientType) {
+		if (clientType != null) {
+			switch (clientType) {
 
-        CompanyFacade companyFacade = (CompanyFacade) loginManager.login("company134@gmail.com", "company3", ClientType.COMPANY);
-        if (companyFacade != null) {
-            try {
-                System.out.println(companyFacade.getCompanyDetails());
-            } catch (CouponSystemException daoException) {
-                daoException.printStackTrace();
-            }
-        } else {
-            System.out.println("Login not success");
-        }
-    }
+			case ADMINISTRATOR:
 
-    public static LoginManager getLoginManagerInstance() {
-        if (loginManagerInstance == null) {
-            loginManagerInstance = new LoginManager();
-        }
-        return loginManagerInstance;
-    }
+				ClientFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
+						new CouponsDBDAO());
+				if (adminFacade.login(email, password)) {
+					System.out.println("You logged as admin");
+					return adminFacade;
+				}
 
-    public ClientFacade login(String email, String password, ClientType clientType) {
-        if (clientType != null) {
-            switch (clientType) {
+				break;
 
-                case ADMINISTRATOR:
+			case COMPANY:
 
+				ClientFacade companyFacade = new CompanyFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
+						new CouponsDBDAO());
+				if (companyFacade.login(email, password)) {
 
-                    ClientFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CustomersDBDAO(), new CouponsDBDAO());
-                    if (adminFacade.login(email, password)) {
-                        System.out.println("You logged as admin");
-                        return adminFacade;
-                    }
+					return companyFacade;
+				} else {
+					System.out.println("No company with this email and password");
+				}
+				break;
 
-                    break;
+			case CUSTOMER:
 
-                case COMPANY:
+				ClientFacade customerFacade = new CustomerFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
+						new CouponsDBDAO());
+				if (customerFacade.login(email, password)) {
 
-                    ClientFacade companyFacade = new CompanyFacade(new CompaniesDBDAO(), new CustomersDBDAO(), new CouponsDBDAO());
-                    if (companyFacade.login(email, password)) {
+					return customerFacade;
+				}
 
-                        return companyFacade;
-                    } else {
-                        System.out.println("No company with this email and password");
-                    }
-                    break;
+				break;
+			default:
+				return null;
+			}
+		}
+		return null;
+	}
 
-
-                case CUSTOMER:
-
-                    ClientFacade customerFacade = new CustomerFacade(new CompaniesDBDAO(), new CustomersDBDAO(), new CouponsDBDAO());
-                    if (customerFacade.login(email, password)) {
-
-                        return customerFacade;
-                    }
-
-                    break;
-                default:
-                    return null;
-            }
-        }
-        return null;
-    }
-
-    public enum ClientType {
-        ADMINISTRATOR, COMPANY, CUSTOMER
-    }
+	public enum ClientType {
+		ADMINISTRATOR, COMPANY, CUSTOMER
+	}
 }

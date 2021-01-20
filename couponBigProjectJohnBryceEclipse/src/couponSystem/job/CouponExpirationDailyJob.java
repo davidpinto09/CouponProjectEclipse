@@ -1,50 +1,52 @@
 package couponSystem.job;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import couponSystem.exceptions.CouponSystemException;
 import couponSystem.javaBeans.Coupon;
 import couponSystem.jdbc.dao.classes.CouponsDBDAO;
 import couponSystem.jdbc.dao.interfaces.CouponsDAO;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 public class CouponExpirationDailyJob implements Runnable {
-    private final CouponsDAO couponsDAO;
-    public long dayInMilliseconds = 84600000;
-    private boolean quit;
+	private final CouponsDAO couponsDAO;
+	public long dayInMilliseconds = 84600000;
+	private boolean quit;
 
-    public CouponExpirationDailyJob(CouponsDAO couponsDAO, boolean quit) {
-        this.couponsDAO = couponsDAO;
-        this.quit = quit;
-    }
+	public CouponExpirationDailyJob(CouponsDAO couponsDAO, boolean quit) {
+		this.couponsDAO = couponsDAO;
+		this.quit = quit;
+	}
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
-        while (!quit) {
-            try {
-                List<Coupon> allCoupons = (ArrayList<Coupon>) couponsDAO.getAllCoupons();
+		while (!quit) {
+			try {
+				List<Coupon> allCoupons = (ArrayList<Coupon>) couponsDAO.getAllCoupons();
 
-                for (Coupon oneCoupon : allCoupons) {
-                    if (oneCoupon.getCouponEndDate().equals(LocalDate.now()) || oneCoupon.getCouponEndDate().isBefore(LocalDate.now())) {
-                        couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID, oneCoupon.getCouponId());
-                        couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCouponID, oneCoupon.getCouponId());
-                    }
-                }
-                Thread.sleep(dayInMilliseconds);
-            } catch (CouponSystemException daoException) {
-                daoException.printStackTrace();
-            } catch (InterruptedException e) {
-                System.out.println("The CouponExpirationDailyJob is shooting down");
-                quit = true;
-            }
-        }
+				for (Coupon oneCoupon : allCoupons) {
+					if (oneCoupon.getCouponEndDate().equals(LocalDate.now())
+							|| oneCoupon.getCouponEndDate().isBefore(LocalDate.now())) {
+						couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID,
+								oneCoupon.getCouponId());
+						couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCouponID, oneCoupon.getCouponId());
+					}
+				}
+				Thread.sleep(dayInMilliseconds);
+			} catch (CouponSystemException daoException) {
+				daoException.printStackTrace();
+			} catch (InterruptedException e) {
+				System.out.println("The CouponExpirationDailyJob is shooting down");
+				quit = true;
+			}
+		}
 
-    }
+	}
 
-    public void stop() {
-        System.out.println("The CouponExpirationDailyJob is shooting down");
-        quit = true;
-    }
+	public void stop() {
+		System.out.println("The CouponExpirationDailyJob is shooting down");
+		quit = true;
+	}
 }

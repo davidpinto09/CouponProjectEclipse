@@ -1,15 +1,18 @@
 package couponSystem.jdbc.dao.classes;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import couponSystem.exceptions.CouponSystemException;
 import couponSystem.exceptions.DAOException;
 import couponSystem.javaBeans.Customer;
 import couponSystem.jdbc.connectionPool.ConnectionPool;
 import couponSystem.jdbc.dao.interfaces.CustomersDAO;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class CustomersDBDAO implements CustomersDAO {
 
