@@ -1,7 +1,5 @@
 package couponSystem.loginManager;
 
-
-import couponSystem.exceptions.CouponSystemException;
 import couponSystem.facades.AdminFacade;
 import couponSystem.facades.ClientFacade;
 import couponSystem.facades.CompanyFacade;
@@ -16,23 +14,6 @@ public class LoginManager {
 
 	private LoginManager() {
 
-	}
-
-	public static void main(String[] args) {
-
-		LoginManager loginManager = LoginManager.getLoginManagerInstance();
-
-		CompanyFacade companyFacade = (CompanyFacade) loginManager.login("company3@gmail.com", "company3",
-				ClientType.COMPANY);
-		if (companyFacade != null) {
-			try {
-				System.out.println(companyFacade.getCompanyDetails());
-			} catch (CouponSystemException daoException) {
-				daoException.printStackTrace();
-			}
-		} else {
-			System.out.println("Login not success");
-		}
 	}
 
 	public static LoginManager getLoginManagerInstance() {

@@ -11,7 +11,7 @@ public interface CouponsDAO {
 	/**
 	 * Before that a company can adds a coupon this method verifies that the title
 	 * of the coupon to add is not related to the company who tries to add This
-	 * method verifies if the company created a coupon wi using the title exists in
+	 * method verifies if the company created a coupon with using the title exists in
 	 * database
 	 *
 	 * @param companyId   company who wants to add
@@ -92,7 +92,7 @@ public interface CouponsDAO {
 	 * @throws DAOException          if there is no Coupons in DataBase
 	 */
 
-	Collection<Coupon> getCouponsBy(String sql, int currCompanyID, Object searchParameter) throws CouponSystemException;
+	Collection<Coupon> getCouponsBy(String sql, int id, Object searchParameter) throws CouponSystemException;
 
 	/**
 	 * Get a specific Coupon
