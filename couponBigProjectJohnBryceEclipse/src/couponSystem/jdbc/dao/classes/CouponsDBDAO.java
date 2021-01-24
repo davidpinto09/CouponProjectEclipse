@@ -169,14 +169,22 @@ public class CouponsDBDAO implements CouponsDAO {
 	}
 
 	@Override
-	public void deleteCoupon(String sql, int searchParameter) throws CouponSystemException {
+	public void deleteCoupon(String sql, int currentId) throws CouponSystemException {
 		Connection connection = null;
 		try {
 			connection = getConnectionPool().getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(sql + searchParameter);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql + currentId);
 			int actualCustomerRow = preparedStatement.executeUpdate();
 			if (actualCustomerRow == 0) {
-				throw new DAOException("Deleting Coupon failed because it is not in the DataBase");
+				if (sql.equals(CouponsDBDAO.deleteCouponByCouponID)) {
+					throw new DAOException(
+							"Deleting Coupon failed - Coupon with id: " + currentId + " does not exists");
+				}
+				if (sql.equals(CouponsDBDAO.deleteCouponByCompanyID)) {
+
+					throw new DAOException("Deleting Coupon failed - Company with id:" + currentId + " has no coupons");
+
+				}
 			}
 		} catch (SQLException sqlException) {
 			throw new DAOException("Deleting Coupon has failed", sqlException);
@@ -189,18 +197,28 @@ public class CouponsDBDAO implements CouponsDAO {
 	}
 
 	@Override
-	public void deleteCouponPurchase(String sql, int searchParameter) throws CouponSystemException {
+	public void deleteCouponPurchase(String sql, int currentId) throws CouponSystemException {
 		Connection connection = null;
 		try {
+
 			connection = getConnectionPool().getConnection();
-			PreparedStatement ps = connection.prepareStatement(sql + searchParameter);
+			PreparedStatement ps = connection.prepareStatement(sql + currentId);
 			int actualCustomerRow = ps.executeUpdate();
 			if (actualCustomerRow == 0) {
-				throw new DAOException("Deleting Coupon purchase failed because it's not in the DataBase");
+				if (sql.equals(CouponsDBDAO.deleteCouponPurchaseByCouponID)) {
+					throw new DAOException(
+							"Deleting Coupon Purchase failed - Coupon with id: " + currentId + " does not exists");
+				}
+				if (sql.equals(CouponsDBDAO.deleteCouponPurchaseByCustomerID)) {
+
+					throw new DAOException(
+							"Deleting Coupon Purchase failed - Customer with id:" + currentId + " has no coupons");
+
+				}
 			}
 
 		} catch (SQLException e) {
-			throw new DAOException("Deleting coupon purchase failed." + e);
+			throw new DAOException("Deleting Coupon Purchase failed." + e);
 		} finally {
 
 			if (connection != null) {
@@ -212,6 +230,7 @@ public class CouponsDBDAO implements CouponsDAO {
 	@Override
 	public void deleteCouponPurchaseByCompanyId(int companyID) throws CouponSystemException {
 		Connection connection = null;
+		
 		try {
 			connection = getConnectionPool().getConnection();
 			List<Integer> couponsIdList = new ArrayList<>();
@@ -223,9 +242,10 @@ public class CouponsDBDAO implements CouponsDAO {
 			}
 			if (!couponsIdList.isEmpty()) {
 				for (Integer couponID : couponsIdList) {
-					String sql1 = "DELETE FROM CUSTOMERS_VS_COUPONS WHERE COUPON_ID=" + couponID;
-					connection.prepareStatement(sql1);
-					ps.executeUpdate();
+					if (isPurchaseExist(couponID)) {
+						deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID, couponID);
+					}
+
 				}
 			}
 		} catch (SQLException sqlException) {
@@ -326,6 +346,29 @@ public class CouponsDBDAO implements CouponsDAO {
 	}
 
 	@Override
+	public boolean isPurchaseExist(int couponId) throws CouponSystemException {
+
+		Connection connection = null;
+
+		try {
+			connection = getConnectionPool().getConnection();
+			String sql = "SELECT COUPON_ID FROM CUSTOMERS_VS_COUPONS WHERE COUPON_ID = " + couponId;
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ResultSet actualPurchase = ps.executeQuery();
+			return actualPurchase.next();
+
+		} catch (SQLException sqlException) {
+			throw new DAOException("isPurchaseExist failed", sqlException);
+		} finally {
+
+			if (connection != null) {
+				getConnectionPool().restoreConnection(connection);
+			}
+		}
+
+	}
+
+	@Override
 	public boolean isPurchaseExist(int customerId, int couponId) throws CouponSystemException {
 
 		Connection connection = null;
@@ -335,8 +378,8 @@ public class CouponsDBDAO implements CouponsDAO {
 			String sql = "SELECT * FROM customers_vs_coupons WHERE CUSTOMER_ID = " + customerId + " AND COUPON_ID = "
 					+ couponId;
 			PreparedStatement ps = connection.prepareStatement(sql);
-			int actualPurchase = ps.executeUpdate();
-			return actualPurchase != 0;
+			ResultSet actualPurchase = ps.executeQuery();
+			return actualPurchase.next();
 
 		} catch (SQLException sqlException) {
 			throw new DAOException("isPurchaseExist failed", sqlException);

@@ -19,7 +19,7 @@ public class CustomerFacade extends ClientFacade {
 
 	public CustomerFacade(CompaniesDAO companiesDAO, CustomersDAO customersDAO, CouponsDAO couponsDAO) {
 		super(companiesDAO, customersDAO, couponsDAO);
-		this.customerId = getCustomerId();
+
 
 	}
 

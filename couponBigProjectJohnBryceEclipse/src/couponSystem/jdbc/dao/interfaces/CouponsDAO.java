@@ -57,22 +57,22 @@ public interface CouponsDAO {
 	 * Delete one or many coupons from the DataBase,can be through Coupon ID or
 	 * Company ID according on the sql String query called.
 	 *
-	 * @param searchParameter: couponId||companyID
+	 * @param currentId: couponId||companyID
 	 * @throws CouponSystemException
 	 * @throws DAOException          if coupon does not exists in DataBase
 	 */
-	void deleteCoupon(String sql, int searchParameter) throws CouponSystemException;
+	void deleteCoupon(String sql, int currentId) throws CouponSystemException;
 
 	/**
 	 * Delete the coupon purchase history from the DataBase, can be through Coupon
 	 * ID or Customer ID according on the sql String query called.
 	 *
-	 * @param searchParameter: couponID||customerID
+	 * @param currentId: couponID||customerID
 	 * @throws CouponSystemException
 	 * @throws DAOException          if coupon does not exists in DataBase
 	 */
 
-	void deleteCouponPurchase(String sql, int searchParameter) throws CouponSystemException;
+	void deleteCouponPurchase(String sql, int currentId) throws CouponSystemException;
 
 	/**
 	 * Delete all the coupons purchased by companyID in DataBase
@@ -105,6 +105,7 @@ public interface CouponsDAO {
 	 */
 	Coupon getOneCoupon(int couponId) throws CouponSystemException;
 
+	 boolean isPurchaseExist(int couponId) throws CouponSystemException ;
 	/**
 	 * @param customerId
 	 * @param couponId

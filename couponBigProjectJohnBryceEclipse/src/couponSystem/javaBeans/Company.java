@@ -74,11 +74,13 @@ public class Company {
 	public String toString() {
 		String toString = "Company{" + "companyId=" + companyId + ", companyName='" + companyName + '\''
 				+ ", companyEmail='" + companyEmail + '\'' + ", companyPassword='" + companyPassword + '\''
-				+ ", companyCoupons=";
+				+ ", companyCoupons='";
 		for (Coupon coupon : companyCoupons) {
 
-			toString += "\n" + coupon.toString();
+			toString += "\n" + '\''+coupon.toString()+'\'';
 		}
+	
+		toString += "'}";
 
 		return toString;
 	}

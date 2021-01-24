@@ -7,7 +7,9 @@ import couponSystem.exceptions.DAOException;
 import couponSystem.exceptions.FacadeException;
 import couponSystem.javaBeans.Company;
 import couponSystem.javaBeans.Customer;
+import couponSystem.jdbc.dao.classes.CompaniesDBDAO;
 import couponSystem.jdbc.dao.classes.CouponsDBDAO;
+import couponSystem.jdbc.dao.classes.CustomersDBDAO;
 import couponSystem.jdbc.dao.interfaces.CompaniesDAO;
 import couponSystem.jdbc.dao.interfaces.CouponsDAO;
 import couponSystem.jdbc.dao.interfaces.CustomersDAO;
@@ -75,6 +77,7 @@ public class AdminFacade extends ClientFacade {
 	 * @throws DAOException          data access object exception
 	 * @throws FacadeException
 	 */
+	
 	public void deleteCompany(int companyID) throws CouponSystemException {
 
 		couponsDAO.deleteCouponPurchaseByCompanyId(companyID);

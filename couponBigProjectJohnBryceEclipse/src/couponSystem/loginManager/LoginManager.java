@@ -35,7 +35,7 @@ public class LoginManager {
 					System.out.println("You logged as admin");
 					return adminFacade;
 				}
-
+				
 				break;
 
 			case COMPANY:

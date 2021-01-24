@@ -70,13 +70,13 @@ public class CustomersDBDAO implements CustomersDAO {
 		try {
 			connection = getConnectionPool().getConnection();
 
-			String sql = "SELECT CUSTOMER_EMAIL FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + customerEmail;
+			String sql = "SELECT CUSTOMER_EMAIL FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + "\""+customerEmail+"\"";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-			int actualCustomer = preparedStatement.executeUpdate();
+			ResultSet actualCustomer = preparedStatement.executeQuery();
 
-			return actualCustomer != 0;
+			return actualCustomer.next();
 
 		} catch (SQLException sqlException) {
 
