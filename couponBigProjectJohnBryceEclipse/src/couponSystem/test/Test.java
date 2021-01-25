@@ -24,36 +24,37 @@ public class Test {
 
 		try {
 
-		AdminFacade adminFacade = (AdminFacade)	loginManager.login(AdminFacade.ADMIN_EMAIL, AdminFacade.ADMIN_PASSWORD, ClientType.ADMINISTRATOR);
-	
-		//Hard-Coded 10 new Companies
-		Company company1 = new Company("company1", "company1@gmail.com", "company1pass");
-		Company company2 = new Company("company2", "company2@gmail.com", "company2pass");
-		Company company3 = new Company("company3", "company3@gmail.com", "company3pass");
-		Company company4 = new Company("company4", "company4@gmail.com", "company4pass");
-		Company company5 = new Company("company5", "company5@gmail.com", "company5pass");
-		Company company6 = new Company("company6", "company6@gmail.com", "company6pass");
-		Company company7 = new Company("company7", "company7@gmail.com", "company7pass");
-		Company company8 = new Company("company8", "company8@gmail.com", "company8pass");
-		Company company9 = new Company("company9", "company9@gmail.com", "company9pass");
-		Company company10 = new Company("company10", "company10@gmail.com", "company10pass");
-		
-		//Copy of company10 to check if system add twice the same company
-		Company company11 = new Company("company10", "company10@gmail.com", "company10pass");
-		
-		//Add all companies to Database
-		adminFacade.addCompany(company1);
-		adminFacade.addCompany(company2);
-		adminFacade.addCompany(company3);
-		adminFacade.addCompany(company4);
-		adminFacade.addCompany(company5);
-		adminFacade.addCompany(company6);
-		adminFacade.addCompany(company7);
-		adminFacade.addCompany(company8);
-		adminFacade.addCompany(company9);
-		adminFacade.addCompany(company10);
-		adminFacade.addCompany(company11);
-		
+			AdminFacade adminFacade = (AdminFacade) loginManager.login(AdminFacade.ADMIN_EMAIL,
+					AdminFacade.ADMIN_PASSWORD, ClientType.ADMINISTRATOR);
+
+			// Hard-Coded 10 new Companies
+			Company company1 = new Company("company1", "company1@gmail.com", "company1pass");
+			Company company2 = new Company("company2", "company2@gmail.com", "company2pass");
+			Company company3 = new Company("company3", "company3@gmail.com", "company3pass");
+			Company company4 = new Company("company4", "company4@gmail.com", "company4pass");
+			Company company5 = new Company("company5", "company5@gmail.com", "company5pass");
+			Company company6 = new Company("company6", "company6@gmail.com", "company6pass");
+			Company company7 = new Company("company7", "company7@gmail.com", "company7pass");
+			Company company8 = new Company("company8", "company8@gmail.com", "company8pass");
+			Company company9 = new Company("company9", "company9@gmail.com", "company9pass");
+			Company company10 = new Company("company10", "company10@gmail.com", "company10pass");
+
+			// Copy of company10 to check if system add twice the same company
+			Company company11 = new Company("company10", "company10@gmail.com", "company10pass");
+
+			// Add all companies to Database
+			adminFacade.addCompany(company1);
+			adminFacade.addCompany(company2);
+			adminFacade.addCompany(company3);
+			adminFacade.addCompany(company4);
+			adminFacade.addCompany(company5);
+			adminFacade.addCompany(company6);
+			adminFacade.addCompany(company7);
+			adminFacade.addCompany(company8);
+			adminFacade.addCompany(company9);
+			adminFacade.addCompany(company10);
+			adminFacade.addCompany(company11);
+
 //		//Get one Company from Database
 //		Company company12 = adminFacade.getOneCompany(3);
 //		
@@ -125,21 +126,14 @@ public class Test {
 //		//Get All Customer
 //		System.out.println(adminFacade.getAllCustomers());
 //		
-		
-		} catch (Exception e) {
 
+		} catch (CouponSystemException e) {
+			System.out.println(e.getMessage());
 		} finally {
-			try {
-				couponJob.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			couponJob.interrupt();
 			connectionPool.closeAllConnections();
 
 		}
 	}
-
-	
 
 }

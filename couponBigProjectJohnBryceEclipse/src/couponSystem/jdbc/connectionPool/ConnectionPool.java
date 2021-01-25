@@ -127,9 +127,10 @@ public class ConnectionPool {
 					throw new CouponSystemException("closing connections failed", sqlException);
 				}
 			}
-			System.out.println("ConnectionPool is down");
+			
 
 		}
+		System.out.println("ConnectionPool is down");
 	}
 
 	public Set<Connection> getConnections() {

@@ -35,8 +35,8 @@ public class CouponExpirationDailyJob implements Runnable {
 					}
 				}
 				Thread.sleep(dayInMilliseconds);
-			} catch (CouponSystemException daoException) {
-				
+			} catch (CouponSystemException couponSystemException) {
+				couponSystemException.printStackTrace();
 			} catch (InterruptedException e) {
 				System.out.println("The CouponExpirationDailyJob is shooting down");
 				quit = true;

@@ -416,6 +416,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
 				allCoupons.add(new Coupon(couponId, companyID, category, couponTitle, couponDescription,
 						couponStartDate, couponEndDate, couponAmount, couponPrice, couponImage));
+				
 			}
 
 		} catch (SQLException sqlException) {
@@ -426,9 +427,7 @@ public class CouponsDBDAO implements CouponsDAO {
 				getConnectionPool().restoreConnection(connection);
 			}
 		}
-		if (allCoupons.isEmpty()) {
-			throw new DAOException("Sorry but no coupons have been created in the database");
-		}
+		
 		return allCoupons;
 	}
 

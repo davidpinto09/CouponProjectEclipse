@@ -41,10 +41,10 @@ public class AdminFacade extends ClientFacade {
 	public void addCompany(Company company) throws CouponSystemException {
 		if (!companiesDAO.isCompanyInDatabase(company.getCompanyName(), company.getCompanyEmail())) {
 			companiesDAO.addCompany(company);
-			System.out.println("company has been added");
-		} else
+		} else {
 			throw new FacadeException("Adding company " + company.getCompanyName()
 					+ " has failed because it already exists in the DataBase.");
+		}
 	}
 
 	/**

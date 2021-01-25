@@ -98,7 +98,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 			preparedStatement.executeUpdate();
 
-			System.out.println(company.getCompanyName() + "has been added");
+			System.out.println(company.getCompanyName() + " has been added");
 
 		} catch (SQLException sqlException) {
 
