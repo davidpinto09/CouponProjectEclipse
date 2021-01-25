@@ -1,10 +1,7 @@
 package couponSystem.javaBeans;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import couponSystem.javaBeans.Coupon.Category;
 
 public class Company {
 
