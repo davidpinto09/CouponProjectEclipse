@@ -9,21 +9,26 @@ import couponSystem.javaBeans.Customer;
 public interface CustomersDAO {
 
 	/**
-	 * Verify in DataBase if the Customer exists
+	 * Verify in DataBase if the Customer exists for method login
 	 *
 	 * @param customerEmail    the actual email of customer equalsIgnoreCase
 	 * @param customerPassword the actual password of customer must be equals
 	 * @return boolean
 	 * @throws CouponSystemException
 	 * @throws DAOException          if customer does not exists in DataBase
+	 * @throws SQLException          if the sql execution failed
 	 */
 	boolean isCustomerExists(String customerEmail, String customerPassword) throws CouponSystemException;
 
 	/**
+	 * Verify if customer is in database to proceed to addCustomer or updateCustomer or
+	 * deleteCustomer
+	 *
 	 * @param customerEmail
 	 * @return
 	 * @throws CouponSystemException
 	 * @throws DAOException          if customer does not exists in DataBase
+	 * @throws SQLException          if the sql execution failed
 	 */
 	boolean isCustomerInDataBase(String customerEmail) throws CouponSystemException;
 
@@ -34,6 +39,7 @@ public interface CustomersDAO {
 	 * @throws CouponSystemException
 	 * @throws DAOException          if data from parameter does not accord the
 	 *                               table values
+	 * @throws SQLException          if the sql execution failed
 	 */
 	void addCustomer(Customer customer) throws CouponSystemException;
 
@@ -43,6 +49,7 @@ public interface CustomersDAO {
 	 * @param customer to update
 	 * @throws CouponSystemException
 	 * @throws DAOException          if customer does not exists in DataBase
+	 * @throws SQLException          if the sql execution failed
 	 */
 	void updateCustomer(Customer customer) throws CouponSystemException;
 
@@ -52,6 +59,7 @@ public interface CustomersDAO {
 	 * @param customerId to delete
 	 * @throws CouponSystemException
 	 * @throws DAOException          if customer does not exists in DataBase
+	 * @throws SQLException          if the sql execution failed
 	 */
 	void deleteCustomer(int customerId) throws CouponSystemException;
 
@@ -61,6 +69,7 @@ public interface CustomersDAO {
 	 * @return collection of all customers
 	 * @throws CouponSystemException
 	 * @throws DAOException          if customer does not exists in DataBase
+	 * @throws SQLException          if the sql execution failed
 	 */
 	Collection<Customer> getAllCustomers() throws CouponSystemException;
 
@@ -71,6 +80,7 @@ public interface CustomersDAO {
 	 * @return specific customer
 	 * @throws CouponSystemException
 	 * @throws DAOException          if customer does not exists in DataBase
+	 * @throws SQLException          if the sql execution failed
 	 */
 	Customer getOneCustomer(int customersId) throws CouponSystemException;
 

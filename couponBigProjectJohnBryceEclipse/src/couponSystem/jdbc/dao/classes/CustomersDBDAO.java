@@ -33,24 +33,14 @@ public class CustomersDBDAO implements CustomersDAO {
 		try {
 			connection = getConnectionPool().getConnection();
 
-			String sql = "SELECT CUSTOMER_EMAIL, CUSTOMER_PASSWORD FROM CUSTOMERS";
+			String sql = "SELECT CUSTOMER_EMAIL, CUSTOMER_PASSWORD FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + "\""
+					+ customerEmail + " AND CUSTOMER_PASSWORD = " + "\"" + customersPassword + "\"";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			while (resultSet.next()) {
-
-				String actualEmail = resultSet.getString("CUSTOMER_EMAIL");
-
-				String actualPassword = resultSet.getString("CUSTOMER_PASSWORD");
-
-				if (customerEmail.equalsIgnoreCase(actualEmail) && customersPassword.equals(actualPassword)) {
-
-					return true;
-				}
-
-			}
+			return resultSet.next();
 
 		} catch (SQLException sqlException) {
 
@@ -61,7 +51,7 @@ public class CustomersDBDAO implements CustomersDAO {
 			}
 		}
 
-		return false;
+		
 	}
 
 	@Override
@@ -70,7 +60,7 @@ public class CustomersDBDAO implements CustomersDAO {
 		try {
 			connection = getConnectionPool().getConnection();
 
-			String sql = "SELECT CUSTOMER_EMAIL FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + "\""+customerEmail+"\"";
+			String sql = "SELECT CUSTOMER_EMAIL FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + "\"" + customerEmail + "\"";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 

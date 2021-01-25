@@ -6,13 +6,17 @@ import couponSystem.exceptions.CouponSystemException;
 import couponSystem.exceptions.DAOException;
 import couponSystem.javaBeans.Coupon;
 
+/**
+ * @author David Pinto
+ *
+ */
 public interface CouponsDAO {
 
 	/**
 	 * Before that a company can adds a coupon this method verifies that the title
 	 * of the coupon to add is not related to the company who tries to add This
-	 * method verifies if the company created a coupon with using the title exists in
-	 * database
+	 * method verifies if the company created a coupon with using the title exists
+	 * in database
 	 *
 	 * @param companyId   company who wants to add
 	 * @param couponTitle actual coupon title to add
@@ -56,7 +60,8 @@ public interface CouponsDAO {
 	/**
 	 * Delete one or many coupons from the DataBase,can be through Coupon ID or
 	 * Company ID according on the sql String query called.
-	 *
+	 * 
+	 * @param sql        one of the static final fields in Class CouponsDBDAO
 	 * @param currentId: couponId||companyID
 	 * @throws CouponSystemException
 	 * @throws DAOException          if coupon does not exists in DataBase
@@ -66,7 +71,8 @@ public interface CouponsDAO {
 	/**
 	 * Delete the coupon purchase history from the DataBase, can be through Coupon
 	 * ID or Customer ID according on the sql String query called.
-	 *
+	 * 
+	 * @param sql        one of the static final fields in Class CouponsDBDAO
 	 * @param currentId: couponID||customerID
 	 * @throws CouponSystemException
 	 * @throws DAOException          if coupon does not exists in DataBase
@@ -75,9 +81,10 @@ public interface CouponsDAO {
 	void deleteCouponPurchase(String sql, int currentId) throws CouponSystemException;
 
 	/**
-	 * Delete all the coupons purchased by companyID in DataBase
+	 * When Admin wants or has been asked to delete a company, this method will
+	 * delete all coupons that have been purchase
 	 *
-	 * @param companyID to delete
+	 * @param companyID company who admin wants to delete
 	 * @throws CouponSystemException
 	 * @throws DAOException          if coupon does not exists in DataBase
 	 */
@@ -85,13 +92,21 @@ public interface CouponsDAO {
 	void deleteCouponPurchaseByCompanyId(int companyID) throws CouponSystemException;
 
 	/**
-	 * Get all the Company Coupons in DatBase
-	 *
-	 * @return collection of all coupons of the company
-	 * @throws CouponSystemException
-	 * @throws DAOException          if there is no Coupons in DataBase
+	 * This methods return collection of coupons depending of the static final sql
+	 * in class CouponsDBDAO, the id sent (can be couponID,companyID or customerID)
+	 * and the searchParameter if is not null it will search specific coupons to add
+	 * into the collection.
+	 * 
+	 * @param sql             one of the static final fields in Class CouponsDBDAO
+	 * @param id              can be couponID,companyID,customerID
+	 * @param searchParameter if null it returns all coupons, else specific coupons
+	 *                        depending of this parameter. Ex(price,
+	 *                        Category,amount,...).
+	 * @implNote the sql and the search parameter they must be related
+	 * @return collection of coupons
+	 * @throws DAOException if the collection is empty
+	 * @throws SQLException if error in during sql execution
 	 */
-
 	Collection<Coupon> getCouponsBy(String sql, int id, Object searchParameter) throws CouponSystemException;
 
 	/**
@@ -105,11 +120,25 @@ public interface CouponsDAO {
 	 */
 	Coupon getOneCoupon(int couponId) throws CouponSystemException;
 
-	 boolean isPurchaseExist(int couponId) throws CouponSystemException ;
 	/**
-	 * @param customerId
-	 * @param couponId
-	 * @return boolean
+	 * This method verifies if a specific coupon identified as couponID has been
+	 * purchased
+	 * 
+	 * @param couponId coupon purchased
+	 * @return boolean true if the coupon has been purchased , else false
+	 * @throws CouponSystemException
+	 * @throws DAOException
+	 */
+	boolean isPurchaseExist(int couponId) throws CouponSystemException;
+
+	/**
+	 * This method verifies if customer identified as customerID has purchase a
+	 * specific coupon identified as couponID
+	 * 
+	 * @param customerId specific customer who logged
+	 * @param couponId   coupon to purchase
+	 * @return boolean true if this customer has already purchase the coupon, else
+	 *         false
 	 * @throws CouponSystemException
 	 * @throws DAOException
 	 */

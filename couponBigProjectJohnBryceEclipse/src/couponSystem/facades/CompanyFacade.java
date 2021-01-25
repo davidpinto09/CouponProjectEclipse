@@ -35,6 +35,8 @@ public class CompanyFacade extends ClientFacade {
 
 			if (companiesDAO.isCompanyExists(email, password)) {
 				isExist = true;
+				
+				//maybe make a function getOneCompanyByEmail(email) to not run into all companies a lot of times
 				for (Company oneCompany : companiesDAO.getAllCompanies()) {
 
 					if (oneCompany.getCompanyEmail().equalsIgnoreCase(email)) {

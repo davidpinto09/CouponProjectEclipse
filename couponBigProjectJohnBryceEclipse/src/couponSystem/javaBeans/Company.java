@@ -1,7 +1,10 @@
 package couponSystem.javaBeans;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import couponSystem.javaBeans.Coupon.Category;
 
 public class Company {
 
@@ -75,13 +78,21 @@ public class Company {
 		String toString = "Company{" + "companyId=" + companyId + ", companyName='" + companyName + '\''
 				+ ", companyEmail='" + companyEmail + '\'' + ", companyPassword='" + companyPassword + '\''
 				+ ", companyCoupons='";
-		for (Coupon coupon : companyCoupons) {
-
-			toString += "\n" + '\''+coupon.toString()+'\'';
-		}
+		toString = getCouponToString(toString);
 	
 		toString += "'}";
 
 		return toString;
+	}
+
+	public String getCouponToString(String toString) {
+		if(!this.getCompanyCoupons().isEmpty()) {
+		for (Coupon coupon : this.getCompanyCoupons()) {
+
+			toString += "\n" + '\''+coupon.toString()+'\'';
+		}
+		return toString;
+		}
+		return toString += "null";
 	}
 }

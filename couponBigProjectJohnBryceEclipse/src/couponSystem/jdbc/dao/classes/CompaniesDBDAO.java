@@ -65,9 +65,9 @@ public class CompaniesDBDAO implements CompaniesDAO {
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-			int actualCompany = preparedStatement.executeUpdate();
+			ResultSet actualCompany = preparedStatement.executeQuery();
 
-			return actualCompany != 0;
+			return actualCompany.next();
 
 		} catch (SQLException sqlException) {
 
@@ -131,7 +131,6 @@ public class CompaniesDBDAO implements CompaniesDAO {
 				throw new DAOException("Updating Company " + company + " failed because is not in the DataBase");
 			}
 
-			System.out.println("Updating " + company.getCompanyName() + " worked.");
 		} catch (SQLException sqlException) {
 
 			throw new DAOException("Updating Company " + company + " has failed", sqlException);
@@ -151,7 +150,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		Connection connection = null;
 		try {
 			connection = getConnectionPool().getConnection();
-
+			
 			String sql = "DELETE FROM COMPANIES WHERE COMPANY_ID = " + companyId;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			int actualCompanyRow = preparedStatement.executeUpdate();
