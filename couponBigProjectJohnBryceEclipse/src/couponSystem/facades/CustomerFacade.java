@@ -71,7 +71,7 @@ public class CustomerFacade extends ClientFacade {
 
 		if (!couponsDAO.isPurchaseExist(this.customerId, coupon.getCouponId())) {
 			if (coupon.getCouponAmount() > 0) {
-				if (coupon.getCouponEndDate().isBefore(LocalDate.now())) {
+				if (coupon.getCouponEndDate().isAfter(LocalDate.now())) {
 					couponsDAO.addCouponPurchase(this.customerId, coupon.getCouponId());
 					coupon.setCouponAmount(coupon.getCouponAmount() - 1);
 					couponsDAO.updateCoupon(coupon);

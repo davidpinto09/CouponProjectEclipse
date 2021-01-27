@@ -96,13 +96,12 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			preparedStatement.setString(3, company.getCompanyEmail());
 			preparedStatement.setString(4, company.getCompanyPassword());
 
-			if (preparedStatement.execute()) {
+			
 				preparedStatement.executeUpdate();
 				System.out.println(
 						"The Company with name : " + company.getCompanyName()+ " has been added ");
-			} else {
-				throw new DAOException("Adding Company with name:  " +company.getCompanyName() + " failed ");
-			}
+				
+		
 
 		} catch (SQLException sqlException) {
 

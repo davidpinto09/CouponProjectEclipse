@@ -8,6 +8,7 @@ import java.util.List;
 import couponSystem.exceptions.CouponSystemException;
 import couponSystem.facades.AdminFacade;
 import couponSystem.facades.CompanyFacade;
+import couponSystem.facades.CustomerFacade;
 import couponSystem.javaBeans.Company;
 import couponSystem.javaBeans.Coupon;
 import couponSystem.javaBeans.Coupon.Category;
@@ -33,22 +34,97 @@ public class Test {
 
 		try {
 
-			// adminMethods(loginManager);
-			//companyMethods(loginManager);
-
-			// CustomerFacade
+			adminMethods(loginManager);
+			companyMethods(loginManager);
+			customerMethods(loginManager, couponsDAO);
 
 		} finally {
-			couponJob.interrupt();
-			connectionPool.closeAllConnections();
+
+			try {
+				couponJob.interrupt();
+				couponJob.join();
+				connectionPool.closeAllConnections();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 	}
 
-	public static void adminMethods(LoginManager loginManager) throws CouponSystemException {
+	private static void customerMethods(LoginManager loginManager, CouponsDAO couponsDBDAO)
+			throws CouponSystemException {
+
+		// Log in with existing customers
+		CustomerFacade customer1 = (CustomerFacade) loginManager.login("customer1@gmail.com", "cus1pass",
+				ClientType.CUSTOMER);
+		CustomerFacade customer2 = (CustomerFacade) loginManager.login("customer2@gmail.com", "cus2pass",
+				ClientType.CUSTOMER);
+		CustomerFacade customer3 = (CustomerFacade) loginManager.login("updateCustomerEmail@gmail.com", "updatepass",
+				ClientType.CUSTOMER);
+
+		// Log in with non existing customer
+		CustomerFacade customer999 = (CustomerFacade) loginManager.login("customer999@gmail.com", "cus999pass",
+				ClientType.CUSTOMER);
+
+		// Get 10 couponsfrom database
+		Coupon coupon1 = couponsDBDAO.getOneCoupon(1);
+		Coupon coupon2 = couponsDBDAO.getOneCoupon(2);
+		Coupon coupon3 = couponsDBDAO.getOneCoupon(3);
+		Coupon coupon4 = couponsDBDAO.getOneCoupon(4);
+		Coupon coupon6 = couponsDBDAO.getOneCoupon(6);
+		Coupon coupon7 = couponsDBDAO.getOneCoupon(7);
+		Coupon coupon9 = couponsDBDAO.getOneCoupon(9);
+		Coupon coupon10 = couponsDBDAO.getOneCoupon(10);
+		Coupon coupon11 = couponsDBDAO.getOneCoupon(11);
+		// Get non existing coupon
+
+		// add purchase coupon to customer
+		customer1.purchaseCoupon(coupon1);
+		customer2.purchaseCoupon(coupon2);
+		customer3.purchaseCoupon(coupon3);
+		customer1.purchaseCoupon(coupon4);
+		customer2.purchaseCoupon(coupon6);
+		customer3.purchaseCoupon(coupon7);
+		customer1.purchaseCoupon(coupon9);
+		customer2.purchaseCoupon(coupon10);
+		customer3.purchaseCoupon(coupon11);
+
+		// Add duplicate coupon to customer
+		customer1.purchaseCoupon(coupon1);
+		Coupon coupon13 = couponsDBDAO.getOneCoupon(13);
+		customer2.purchaseCoupon(coupon13);
+
+		System.out.println(customer1.getAllCustomerCoupons());
+		System.out.println(customer2.getAllCustomerCouponsByCategory(Category.CULTURE_AND_ENTERTAINMENT));
+		System.out.println(customer3.getAllCustomerCouponsByPrice(150));
+
+		System.out.println(customer3.getCustomerDetails());
+
+	}
+
+	/**
+	 * Execute all the methods that admin can do coded
+	 * 
+	 * @param loginManager
+	 * @throws CouponSystemException
+	 */
+	private static void adminMethods(LoginManager loginManager) throws CouponSystemException {
 		AdminFacade adminFacade = (AdminFacade) loginManager.login(AdminFacade.ADMIN_EMAIL, AdminFacade.ADMIN_PASSWORD,
 				ClientType.ADMINISTRATOR);
 
+		adminMethodsCompany(adminFacade);
+
+		adminMethodsCustomer(adminFacade);
+	}
+
+	/**
+	 * Execute hard coded methods that only admin can execute for company
+	 * 
+	 * @param adminFacade admin logged
+	 * @throws CouponSystemException
+	 */
+	private static void adminMethodsCompany(AdminFacade adminFacade) throws CouponSystemException {
 		// Hard-Coded 10 new Companies
 		Company company1 = new Company("company1", "company1@gmail.com", "company1pass");
 		Company company2 = new Company("company2", "company2@gmail.com", "company2pass");
@@ -96,8 +172,16 @@ public class Test {
 
 //Get all companies from database
 		System.out.println(adminFacade.getAllCompanies());
+	}
 
-//Hard-Code 10 new Customers
+	/**
+	 * Execute hard coded methods that only admin can execute for customer
+	 * 
+	 * @param adminFacade admin logged
+	 * @throws CouponSystemException
+	 */
+	private static void adminMethodsCustomer(AdminFacade adminFacade) throws CouponSystemException {
+		// Hard-Code 10 new Customers
 		Customer customer1 = new Customer("First1", "Last1", "customer1@gmail.com", "cus1pass");
 		Customer customer2 = new Customer("First2", "Last2", "customer2@gmail.com", "cus2pass");
 		Customer customer3 = new Customer("First3", "Last3", "customer3@gmail.com", "cus3pass");
@@ -123,28 +207,29 @@ public class Test {
 		adminFacade.addCustomer(customer8);
 		adminFacade.addCustomer(customer9);
 		adminFacade.addCustomer(customer10);
+		// Duplicate customer
 		adminFacade.addCustomer(customer11);
 
-//Get one Customer from Database
+		// Get one Customer from Database
 		Customer customer12 = adminFacade.getOneCustomer(3);
 
-//change all parameters of customer from database via setters
+		// change all parameters of customer from database via setters
 
 		customer12.setCustomerFirstName("updateFirst");
 		customer12.setCustomerLastName("UpdateLast");
 		customer12.setCustomerEmail("updateCustomerEmail@gmail.com");
 		customer12.setCustomerPassword("updatepass");
 
-//Update customer from database
+		// Update customer from database
 		adminFacade.updateCustomer(customer12);
 
-//Delete an existing Customer
+		// Delete an existing Customer
 		adminFacade.deleteCustomer(7);
 
-//Delete a non existing Customer
+		// Delete a non existing Customer
 		adminFacade.deleteCustomer(30);
 
-//Get All Customer
+		// Get All Customer
 		System.out.println(adminFacade.getAllCustomers());
 	}
 
@@ -165,13 +250,13 @@ public class Test {
 		List<Coupon> couponCreationCompany2 = createHardCodeCouponForCompany(company2);
 		List<Coupon> couponCreationCompany3 = createHardCodeCouponForCompany(company3);
 
+		// Add valid coupons to company
 		addCouponsToCompany(company1, couponCreationCompany1);
 		addCouponsToCompany(company2, couponCreationCompany2);
 		addCouponsToCompany(company3, couponCreationCompany3);
 
+		// Add duplicate coupon to company
 		addDuplicateCouponToCompany(company1, couponCreationCompany1);
-		addDuplicateCouponToCompany(company2, couponCreationCompany3);
-		addDuplicateCouponToCompany(company3, couponCreationCompany3);
 
 		// Updating an existing coupon for this company
 		updateCouponForCompany(company1, 1);
@@ -180,11 +265,14 @@ public class Test {
 		updateCouponForCompany(company1, 2);
 
 		// Deleting valid coupon from this company
-		deleteCouponForCompany(company2, 8);
+		deleteCouponForCompany(company2, 12);
+
 		// Deleting non valid coupon from this company
 		deleteCouponForCompany(company2, 6);
 
+		// Print all list of coupons(All coupons,By Category, By maxPrice)
 		printAllCompanyCoupons(company3, Category.ELECTRICITY, 150);
+
 		// Getting details for this company
 		System.out.println(company3.getCompanyDetails());
 	}
@@ -200,7 +288,7 @@ public class Test {
 	 * @param maxPrice print a new list of coupons cheaper or equals to maxPrice
 	 * @throws CouponSystemException
 	 */
-	public static void printAllCompanyCoupons(CompanyFacade company, Category category, double maxPrice)
+	private static void printAllCompanyCoupons(CompanyFacade company, Category category, double maxPrice)
 			throws CouponSystemException {
 		// Getting all coupons for this company
 		System.out.println(company.getAllCompanyCoupons());
@@ -213,6 +301,13 @@ public class Test {
 
 	}
 
+	/**
+	 * This method delete a specific coupon for this company who logged in
+	 * 
+	 * @param company  company who logged in
+	 * @param couponId coupon reference to delete
+	 * @throws CouponSystemException
+	 */
 	private static void deleteCouponForCompany(CompanyFacade company, int couponId) throws CouponSystemException {
 		company.deleteCoupon(couponId);
 
@@ -227,7 +322,7 @@ public class Test {
 	 * @throws CouponSystemException
 	 */
 
-	public static void updateCouponForCompany(CompanyFacade company, int couponId) throws CouponSystemException {
+	private static void updateCouponForCompany(CompanyFacade company, int couponId) throws CouponSystemException {
 		Coupon couponFromDataBase = company.getCouponsDAO().getOneCoupon(couponId);
 
 		// Coupon Modification via setters
@@ -243,8 +338,8 @@ public class Test {
 	}
 
 	/**
-	 * This method takes the last coupon in the list of coupons of the company
-	 * logged and try to add a replica
+	 * This method takes the last coupon in the list of coupons of the company who
+	 * logged and try to add a replica. Exception guaranteed.
 	 * 
 	 * @param company           company logged in
 	 * @param companyCouponList list of coupons of company logged in

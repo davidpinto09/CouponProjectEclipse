@@ -29,7 +29,7 @@ public class CouponsDBDAO implements CouponsDAO {
 	/**
 	 * Get Company Coupons Queries
 	 */
-	public static final String getCompanyCouponsByCouponId = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.COUPON_ID = #";
+
 	public static final String getAllCompanyCouponsByTitle = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.COUPON_TITLE = #";
 	public static final String getAllCompanyCoupons = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = ";
 	public static final String getAllCompanyCouponsByCategory = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.CATEGORY_ID= #";
@@ -97,11 +97,11 @@ public class CouponsDBDAO implements CouponsDAO {
 			ps.setDouble(9, coupon.getCouponPrice());
 			ps.setString(10, coupon.getCouponImage());
 
-			if (ps.execute()) {
+			
 				ps.executeUpdate();
 				System.out.println(
 						"The Coupon with title : " + coupon.getCouponTitle() + " has been added ");
-			}
+		
 
 		} catch (SQLException e) {
 			throw new DAOException("Adding coupon " + coupon.getCouponTitle() + " failed ", e);
@@ -123,14 +123,11 @@ public class CouponsDBDAO implements CouponsDAO {
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setInt(1, customerId);
 			ps.setInt(2, couponId);
-			if (ps.execute()) {
+			
 				ps.executeUpdate();
 				System.out.println(
 						"The customer with id : " + customerId + " has bought the coupon with id : " + couponId);
-			} else {
-				throw new DAOException("AddCouponPurchase for customer with ID " + customerId + " and coupon ID "
-						+ couponId + " failed.");
-			}
+		
 
 		} catch (SQLException e) {
 			throw new DAOException("AddCouponPurchase for customer with ID " + customerId + " and coupon ID " + couponId
@@ -405,7 +402,7 @@ public class CouponsDBDAO implements CouponsDAO {
 
 		try {
 			connection = getConnectionPool().getConnection();
-			String sql = "SELECT * FROM customers_vs_coupons WHERE CUSTOMER_ID = " + customerId + " AND COUPON_ID = "
+			String sql = "SELECT * FROM CUSTOMERS_VS_COUPONS WHERE CUSTOMER_ID = " + customerId + " AND COUPON_ID = "
 					+ couponId;
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ResultSet actualPurchase = ps.executeQuery();

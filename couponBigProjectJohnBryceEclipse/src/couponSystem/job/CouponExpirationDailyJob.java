@@ -25,19 +25,24 @@ public class CouponExpirationDailyJob implements Runnable {
 		while (!quit) {
 			try {
 				List<Coupon> allCoupons = (ArrayList<Coupon>) couponsDAO.getAllCoupons();
-
+System.out.println("Searching for expired coupons.....");
 				for (Coupon oneCoupon : allCoupons) {
 					if (oneCoupon.getCouponEndDate().equals(LocalDate.now())
 							|| oneCoupon.getCouponEndDate().isBefore(LocalDate.now())) {
-						couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID,
-								oneCoupon.getCouponId());
+						if (couponsDAO.isPurchaseExist(oneCoupon.getCouponId())) {
+							couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID,
+									oneCoupon.getCouponId());
+						}
 						couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCouponID, oneCoupon.getCouponId());
 					}
 				}
+			
 				Thread.sleep(dayInMilliseconds);
+				System.out.println("Coupons Expired deleted");
 			} catch (CouponSystemException couponSystemException) {
 				couponSystemException.printStackTrace();
 			} catch (InterruptedException e) {
+				System.out.println("Coupons Expired deleted");
 				System.out.println("The CouponExpirationDailyJob is shooting down");
 				quit = true;
 			}

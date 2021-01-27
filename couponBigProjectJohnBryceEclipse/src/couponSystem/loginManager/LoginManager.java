@@ -58,9 +58,12 @@ public class LoginManager {
 				ClientFacade customerFacade = new CustomerFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
 						new CouponsDBDAO());
 				if (customerFacade.login(email, password)) {
-
+					System.out.println("Logged in with " + email);
 					return customerFacade;
 				}
+				 else {
+						System.err.println("Login error with email: " + email + " or password: " + password);
+					}
 
 				break;
 			default:

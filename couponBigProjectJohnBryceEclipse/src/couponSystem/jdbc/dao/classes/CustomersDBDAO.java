@@ -34,7 +34,7 @@ public class CustomersDBDAO implements CustomersDAO {
 			connection = getConnectionPool().getConnection();
 
 			String sql = "SELECT CUSTOMER_EMAIL, CUSTOMER_PASSWORD FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + "\""
-					+ customerEmail + " AND CUSTOMER_PASSWORD = " + "\"" + customersPassword + "\"";
+					+ customerEmail + "\""+" AND CUSTOMER_PASSWORD = " + "\"" + customersPassword + "\"";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -91,16 +91,13 @@ public class CustomersDBDAO implements CustomersDAO {
 			preparedStatement.setString(4, customer.getCustomerEmail());
 			preparedStatement.setString(5, customer.getCustomerPassword());
 
-			if (preparedStatement.execute()) {
+		
 				preparedStatement.executeUpdate();
 
 				System.out.println(
 						customer.getCustomerFirstName() + " " + customer.getCustomerLastName() + "has been added");
 
-			}else {
-			throw new DAOException("Adding customer " + customer.getCustomerFirstName() + " "
-					+ customer.getCustomerLastName() + " failed");
-			}
+			
 		} catch (SQLException sqlException) {
 
 			throw new DAOException("Adding Customer " + customer.getCustomerFirstName() + " " + " has failed,\n",
