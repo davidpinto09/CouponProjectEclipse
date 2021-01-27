@@ -24,4 +24,18 @@ public abstract class ClientFacade {
 	 * @return boolean
 	 */
 	public abstract boolean login(String email, String password);
+
+	public CompaniesDAO getCompaniesDAO() {
+		return companiesDAO;
+	}
+
+	public CustomersDAO getCustomersDAO() {
+		return customersDAO;
+	}
+
+	public CouponsDAO getCouponsDAO() {
+		return couponsDAO;
+	}
+	
+	
 }

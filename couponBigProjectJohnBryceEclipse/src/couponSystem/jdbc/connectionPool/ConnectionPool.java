@@ -114,8 +114,8 @@ public class ConnectionPool {
 		while (this.connections.size() < TOTAL_CONNECTIONS) {
 			try {
 				wait();
-			} catch (InterruptedException sqlException) {
-				sqlException.printStackTrace();
+			} catch (InterruptedException interruptedException) {
+				interruptedException.printStackTrace();
 			}
 			Iterator<Connection> connectionIterator = this.connections.iterator();
 			while (connectionIterator.hasNext()) {

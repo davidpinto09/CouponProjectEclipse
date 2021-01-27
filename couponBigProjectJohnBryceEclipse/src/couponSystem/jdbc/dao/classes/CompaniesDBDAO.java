@@ -61,7 +61,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		try {
 			connection = getConnectionPool().getConnection();
 			String sql = "SELECT COMPANY_NAME, COMPANY_EMAIL FROM COMPANIES WHERE COMPANY_NAME = " + "\"" + companyName
-					+ "\"" + " AND COMPANY_EMAIL = " + "\"" + companyEmail + "\"";
+					+ "\"" + " OR COMPANY_EMAIL = " + "\"" + companyEmail + "\"";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -96,9 +96,13 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			preparedStatement.setString(3, company.getCompanyEmail());
 			preparedStatement.setString(4, company.getCompanyPassword());
 
-			preparedStatement.executeUpdate();
-
-			System.out.println(company.getCompanyName() + " has been added");
+			if (preparedStatement.execute()) {
+				preparedStatement.executeUpdate();
+				System.out.println(
+						"The Company with name : " + company.getCompanyName()+ " has been added ");
+			} else {
+				throw new DAOException("Adding Company with name:  " +company.getCompanyName() + " failed ");
+			}
 
 		} catch (SQLException sqlException) {
 
@@ -129,6 +133,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			int actualCompanyRow = preparedStatement.executeUpdate();
 			if (actualCompanyRow == 0) {
 				throw new DAOException("Updating Company " + company + " failed because is not in the DataBase");
+			}else {
+				System.out.println("The company:" + company.getCompanyName() + " with id: " + company.getCompanyId() + " has been updated succesfully");
 			}
 
 		} catch (SQLException sqlException) {
@@ -158,6 +164,9 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			if (actualCompanyRow == 0) {
 				throw new DAOException(
 						"Deleting Company with id " + companyId + " failed because it is not in the DataBase");
+			}else {
+				
+				System.out.println("Company with id: " + companyId + " has been deleted");
 			}
 		} catch (SQLException sqlException) {
 			throw new DAOException("Deleting Company with id" + companyId + " has failed", sqlException);

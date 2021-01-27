@@ -82,8 +82,8 @@ public class Company {
 		return toString;
 	}
 
-	public String getCouponToString(String toString) {
-		if(!this.getCompanyCoupons().isEmpty()) {
+	private String getCouponToString(String toString) {
+		if(this.getCompanyCoupons().size() != 0) {
 		for (Coupon coupon : this.getCompanyCoupons()) {
 
 			toString += "\n" + '\''+coupon.toString()+'\'';

@@ -35,7 +35,10 @@ public class LoginManager {
 					System.out.println("You logged as admin");
 					return adminFacade;
 				}
-				
+				else {
+					System.err.println("Login error as admin verify email and password" + email + " " + password);
+				}
+
 				break;
 
 			case COMPANY:
@@ -43,10 +46,10 @@ public class LoginManager {
 				ClientFacade companyFacade = new CompanyFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
 						new CouponsDBDAO());
 				if (companyFacade.login(email, password)) {
-
+					System.out.println("Logged in with " + email);
 					return companyFacade;
 				} else {
-					System.out.println("No company with this email and password");
+					System.err.println("Login error with email: " + email + " or password: " + password);
 				}
 				break;
 

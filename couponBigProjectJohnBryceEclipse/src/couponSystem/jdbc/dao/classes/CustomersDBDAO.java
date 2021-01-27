@@ -51,7 +51,6 @@ public class CustomersDBDAO implements CustomersDAO {
 			}
 		}
 
-		
 	}
 
 	@Override
@@ -92,16 +91,16 @@ public class CustomersDBDAO implements CustomersDAO {
 			preparedStatement.setString(4, customer.getCustomerEmail());
 			preparedStatement.setString(5, customer.getCustomerPassword());
 
-			if (preparedStatement.executeUpdate() != 0) {
+			if (preparedStatement.execute()) {
+				preparedStatement.executeUpdate();
 
 				System.out.println(
 						customer.getCustomerFirstName() + " " + customer.getCustomerLastName() + "has been added");
 
-			} else {
-				throw new DAOException("Adding customer " + customer.getCustomerFirstName() + " "
-						+ customer.getCustomerLastName() + " failed");
+			}else {
+			throw new DAOException("Adding customer " + customer.getCustomerFirstName() + " "
+					+ customer.getCustomerLastName() + " failed");
 			}
-
 		} catch (SQLException sqlException) {
 
 			throw new DAOException("Adding Customer " + customer.getCustomerFirstName() + " " + " has failed,\n",
@@ -135,10 +134,11 @@ public class CustomersDBDAO implements CustomersDAO {
 			if (actualCustomerRow == 0) {
 				throw new DAOException("Updating Customer " + customer.getCustomerFirstName() + " "
 						+ customer.getCustomerLastName() + " failed because is not in the DataBase");
+			} else {
+				System.out.println("Updating " + customer.getCustomerFirstName() + " " + customer.getCustomerLastName()
+						+ " worked.");
 			}
 
-			System.out.println(
-					"Updating " + customer.getCustomerFirstName() + " " + customer.getCustomerLastName() + " worked.");
 		} catch (SQLException sqlException) {
 
 			throw new DAOException("Updating Customer " + customer + " has failed", sqlException);
@@ -162,6 +162,8 @@ public class CustomersDBDAO implements CustomersDAO {
 			if (actualCustomerRow == 0) {
 				throw new DAOException(
 						"Deleting Customer with id " + customerId + " failed because it is not in the DataBase");
+			}else {
+				System.out.println("Deleting Customer with id " + customerId + "  success");
 			}
 		} catch (SQLException sqlException) {
 			throw new DAOException("Deleting Customer with id" + customerId + " has failed", sqlException);

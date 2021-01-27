@@ -58,11 +58,8 @@ public class AdminFacade extends ClientFacade {
 	 */
 
 	public void updateCompany(Company company) throws CouponSystemException {
-		if (companiesDAO.isCompanyInDatabase(company.getCompanyName(), company.getCompanyEmail())) {
-			companiesDAO.updateCompany(company);
-		} else
-			throw new FacadeException(
-					"Updating company " + company.getCompanyName() + " has failed because it does not exist DataBase.");
+
+		companiesDAO.updateCompany(company);
 	}
 
 	/**
@@ -76,8 +73,11 @@ public class AdminFacade extends ClientFacade {
 	 */
 
 	public void deleteCompany(int companyID) throws CouponSystemException {
+	
+	if(couponsDAO.getCouponsBy(CouponsDBDAO.getAllCompanyCoupons, companyID, null).size() != 0) {
 		couponsDAO.deleteCouponPurchaseByCompanyId(companyID);
 		couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCompanyID, companyID);
+	}
 		companiesDAO.deleteCompany(companyID);
 	}
 
@@ -135,12 +135,9 @@ public class AdminFacade extends ClientFacade {
 	 * @throws FacadeException       if customer does not exist
 	 */
 	public void updateCustomer(Customer customer) throws CouponSystemException {
-		if (customersDAO.isCustomerInDataBase(customer.getCustomerEmail())) {
+	
 			customersDAO.updateCustomer(customer);
-		} else {
-			throw new FacadeException("Updateing customer " + customer.getCustomerFirstName() + " "
-					+ customer.getCustomerLastName() + " failed. The customer does not exist in DataBase.");
-		}
+		
 	}
 
 	/**
@@ -152,7 +149,9 @@ public class AdminFacade extends ClientFacade {
 	 * @throws DAOException          data access object exception
 	 */
 	public void deleteCustomer(int customerID) throws CouponSystemException {
+		if(couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCoupons, customerID, null).size() != 0) {
 		couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCustomerID, customerID);
+		}
 		customersDAO.deleteCustomer(customerID);
 	}
 

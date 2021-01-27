@@ -35,8 +35,7 @@ public class CompanyFacade extends ClientFacade {
 
 			if (companiesDAO.isCompanyExists(email, password)) {
 				isExist = true;
-				
-				//maybe make a function getOneCompanyByEmail(email) to not run into all companies a lot of times
+
 				for (Company oneCompany : companiesDAO.getAllCompanies()) {
 
 					if (oneCompany.getCompanyEmail().equalsIgnoreCase(email)) {
@@ -56,7 +55,7 @@ public class CompanyFacade extends ClientFacade {
 	}
 
 	/**
-	 * add coupon to the Data base if the coupon is not exist to the actual company
+	 * add coupon to the Data base if the coupon does not exist for the actual company
 	 *
 	 * @param coupon to add
 	 * @throws CouponSystemException
@@ -84,9 +83,13 @@ public class CompanyFacade extends ClientFacade {
 	 * @throws FacadeException
 	 */
 	public void updateCoupon(Coupon coupon) throws CouponSystemException {
+		if (coupon.getCompanyId() == this.companyID) {
+			couponsDAO.updateCoupon(coupon);
 
-		couponsDAO.updateCoupon(coupon);
-
+		} else {
+			throw new FacadeException("You have no permission to update this coupon, since the coupon with id: "
+					+ coupon.getCouponId() + " does not belong to this company");
+		}
 	}
 
 	/**
@@ -97,10 +100,20 @@ public class CompanyFacade extends ClientFacade {
 	 * @throws DAOException          if the coupon is not exist in DataBase.
 	 * @throws FacadeException
 	 */
-	public void deleteCoupon(int couponId) throws CouponSystemException {
-		couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID, couponId);
-		couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCouponID, couponId);
 
+	public void deleteCoupon(int couponId) throws CouponSystemException {
+		
+
+		Coupon couponToDelete = couponsDAO.getOneCoupon(couponId);
+		if (couponToDelete.getCompanyId() == this.companyID) {
+			if(couponsDAO.isPurchaseExist(couponId)) {
+			couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID, couponId);
+			}
+			couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCouponID, couponId);
+		}else {
+			throw new FacadeException("You have no permission to update this coupon, since the coupon with id: "
+					+ couponId + " does not belong to this company");
+		}
 	}
 
 	/**
