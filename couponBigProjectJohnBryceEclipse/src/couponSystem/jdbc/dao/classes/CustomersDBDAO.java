@@ -34,7 +34,7 @@ public class CustomersDBDAO implements CustomersDAO {
 			connection = getConnectionPool().getConnection();
 
 			String sql = "SELECT CUSTOMER_EMAIL, CUSTOMER_PASSWORD FROM CUSTOMERS WHERE CUSTOMER_EMAIL = " + "\""
-					+ customerEmail + "\""+" AND CUSTOMER_PASSWORD = " + "\"" + customersPassword + "\"";
+					+ customerEmail + "\"" + " AND CUSTOMER_PASSWORD = " + "\"" + customersPassword + "\"";
 
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -91,13 +91,18 @@ public class CustomersDBDAO implements CustomersDAO {
 			preparedStatement.setString(4, customer.getCustomerEmail());
 			preparedStatement.setString(5, customer.getCustomerPassword());
 
-		
-				preparedStatement.executeUpdate();
+			if (preparedStatement.executeUpdate() != 0) {
+				for (Customer oneCustomer : getAllCustomers()) {
+					if (oneCustomer.getCustomerEmail().equals(customer.getCustomerEmail())) {
+						System.out.println("The Customer with name : " + oneCustomer.getCustomerFirstName() + " "
+								+ oneCustomer.getCustomerLastName() + " has been added and has received the id "
+								+ oneCustomer.getCustomerId());
+						break;
+					}
 
-				System.out.println(
-						customer.getCustomerFirstName() + " " + customer.getCustomerLastName() + "has been added");
+				}
+			}
 
-			
 		} catch (SQLException sqlException) {
 
 			throw new DAOException("Adding Customer " + customer.getCustomerFirstName() + " " + " has failed,\n",
@@ -159,7 +164,7 @@ public class CustomersDBDAO implements CustomersDAO {
 			if (actualCustomerRow == 0) {
 				throw new DAOException(
 						"Deleting Customer with id " + customerId + " failed because it is not in the DataBase");
-			}else {
+			} else {
 				System.out.println("Deleting Customer with id " + customerId + "  success");
 			}
 		} catch (SQLException sqlException) {

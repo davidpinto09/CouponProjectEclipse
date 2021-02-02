@@ -33,7 +33,7 @@ public class CouponsDBDAO implements CouponsDAO {
 	public static final String getAllCompanyCouponsByTitle = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.COUPON_TITLE = #";
 	public static final String getAllCompanyCoupons = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = ";
 	public static final String getAllCompanyCouponsByCategory = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.CATEGORY_ID= #";
-	public static final String getAllCompanyCouponsByMaxPrice = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.COUPON_PRICE >= # ";
+	public static final String getAllCompanyCouponsByMaxPrice = "SELECT * FROM COUPONS CO WHERE CO.COMPANY_ID = @ AND CO.COUPON_PRICE <= # ";
 
 	/**
 	 * Get Customer Coupons Queries
@@ -98,10 +98,16 @@ public class CouponsDBDAO implements CouponsDAO {
 			ps.setString(10, coupon.getCouponImage());
 
 			
-				ps.executeUpdate();
-				System.out.println(
-						"The Coupon with title : " + coupon.getCouponTitle() + " has been added ");
-		
+			if (ps.executeUpdate() != 0) {
+				for (Coupon oneCoupon : getAllCoupons()) {
+					if (oneCoupon.getCompanyId() == coupon.getCompanyId() && oneCoupon.getCouponTitle().equals(coupon.getCouponTitle())) {
+						System.out.println("The Coupon with title : " +oneCoupon.getCouponTitle() +" has been added and has received the id "
+								+ oneCoupon.getCouponId());
+						break;
+					}
+
+				}
+			}
 
 		} catch (SQLException e) {
 			throw new DAOException("Adding coupon " + coupon.getCouponTitle() + " failed ", e);

@@ -9,13 +9,14 @@ public abstract class ClientFacade {
 	protected CompaniesDAO companiesDAO;
 	protected CustomersDAO customersDAO;
 	protected CouponsDAO couponsDAO;
+	
 
 	public ClientFacade(CompaniesDAO companiesDAO, CustomersDAO customersDAO, CouponsDAO couponsDAO) {
 		this.companiesDAO = companiesDAO;
 		this.customersDAO = customersDAO;
 		this.couponsDAO = couponsDAO;
 	}
-
+	
 	/**
 	 * This method give the access to a specific Client to the program
 	 *
@@ -36,6 +37,5 @@ public abstract class ClientFacade {
 	public CouponsDAO getCouponsDAO() {
 		return couponsDAO;
 	}
-	
 	
 }

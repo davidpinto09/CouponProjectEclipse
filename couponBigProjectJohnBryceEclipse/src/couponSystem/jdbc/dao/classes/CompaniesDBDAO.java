@@ -96,12 +96,16 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			preparedStatement.setString(3, company.getCompanyEmail());
 			preparedStatement.setString(4, company.getCompanyPassword());
 
-			
-				preparedStatement.executeUpdate();
-				System.out.println(
-						"The Company with name : " + company.getCompanyName()+ " has been added ");
-				
-		
+			if (preparedStatement.executeUpdate() != 0) {
+
+				for (Company oneCompany : getAllCompanies()) {
+					if (oneCompany.getCompanyEmail().equals(company.getCompanyEmail())) {
+						System.out.println("The Company with name : " + oneCompany.getCompanyName()
+								+ " has been added and has received the id " + oneCompany.getCompanyId());
+						break;
+					}
+				}
+			}
 
 		} catch (SQLException sqlException) {
 
@@ -132,8 +136,9 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			int actualCompanyRow = preparedStatement.executeUpdate();
 			if (actualCompanyRow == 0) {
 				throw new DAOException("Updating Company " + company + " failed because is not in the DataBase");
-			}else {
-				System.out.println("The company:" + company.getCompanyName() + " with id: " + company.getCompanyId() + " has been updated succesfully");
+			} else {
+				System.out.println("The company:" + company.getCompanyName() + " with id: " + company.getCompanyId()
+						+ " has been updated succesfully");
 			}
 
 		} catch (SQLException sqlException) {
@@ -155,7 +160,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 		Connection connection = null;
 		try {
 			connection = getConnectionPool().getConnection();
-			
+
 			String sql = "DELETE FROM COMPANIES WHERE COMPANY_ID = " + companyId;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			int actualCompanyRow = preparedStatement.executeUpdate();
@@ -163,8 +168,8 @@ public class CompaniesDBDAO implements CompaniesDAO {
 			if (actualCompanyRow == 0) {
 				throw new DAOException(
 						"Deleting Company with id " + companyId + " failed because it is not in the DataBase");
-			}else {
-				
+			} else {
+
 				System.out.println("Company with id: " + companyId + " has been deleted");
 			}
 		} catch (SQLException sqlException) {
@@ -234,6 +239,7 @@ public class CompaniesDBDAO implements CompaniesDAO {
 				return new Company(companyId, actualCompanyName, actualCompanyEmail, actualCompanyPassword);
 
 			}
+
 		} catch (SQLException sqlException) {
 			throw new DAOException(" Getting one Companies has failed", sqlException);
 		} finally {

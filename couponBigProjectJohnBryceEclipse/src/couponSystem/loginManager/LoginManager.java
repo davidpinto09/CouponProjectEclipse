@@ -32,6 +32,7 @@ public class LoginManager {
 				ClientFacade adminFacade = new AdminFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
 						new CouponsDBDAO());
 				if (adminFacade.login(email, password)) {
+			
 					System.out.println("You logged as admin");
 					return adminFacade;
 				}
@@ -46,10 +47,11 @@ public class LoginManager {
 				ClientFacade companyFacade = new CompanyFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
 						new CouponsDBDAO());
 				if (companyFacade.login(email, password)) {
+				
 					System.out.println("Logged in with " + email);
 					return companyFacade;
 				} else {
-					System.err.println("Login error with email: " + email + " or password: " + password);
+					System.err.println("Login error with email: " + email + " or password: " + password+".\nThe data does not match with database");
 				}
 				break;
 
@@ -58,16 +60,16 @@ public class LoginManager {
 				ClientFacade customerFacade = new CustomerFacade(new CompaniesDBDAO(), new CustomersDBDAO(),
 						new CouponsDBDAO());
 				if (customerFacade.login(email, password)) {
+	
 					System.out.println("Logged in with " + email);
 					return customerFacade;
 				}
 				 else {
-						System.err.println("Login error with email: " + email + " or password: " + password);
+						System.err.println("Login error with email: " + email + " or password: " + password+".\nThe data does not match with database");
 					}
 
 				break;
-			default:
-				return null;
+		
 			}
 		}
 		return null;

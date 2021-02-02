@@ -12,6 +12,10 @@ public class Company {
 	private String companyPassword;
 	private List<Coupon> companyCoupons = new ArrayList<>();
 
+	public Company() {
+
+	}
+
 	public Company(String companyName, String companyEmail, String companyPassword) {
 
 		this.companyName = companyName;
@@ -76,19 +80,19 @@ public class Company {
 				+ ", companyEmail='" + companyEmail + '\'' + ", companyPassword='" + companyPassword + '\''
 				+ ", companyCoupons='";
 		toString = getCouponToString(toString);
-	
-		toString += "'}";
+
+		toString += "'}\n";
 
 		return toString;
 	}
 
 	private String getCouponToString(String toString) {
-		if(this.getCompanyCoupons().size() != 0) {
-		for (Coupon coupon : this.getCompanyCoupons()) {
+		if (this.getCompanyCoupons().size() != 0) {
+			for (Coupon coupon : this.getCompanyCoupons()) {
 
-			toString += "\n" + '\''+coupon.toString()+'\'';
-		}
-		return toString;
+				toString += "\n" + '\'' + coupon.toString() + '\'';
+			}
+			return toString;
 		}
 		return toString += "null";
 	}

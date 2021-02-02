@@ -11,6 +11,10 @@ public class Coupon {
 	private LocalDate couponStartDate, couponEndDate;
 	private double couponPrice;
 
+	public Coupon() {
+
+	}
+
 	public Coupon(int couponId, int companyId, Category couponCategory, String couponTitle, String couponDescription,
 			LocalDate couponStartDate, LocalDate couponEndDate, int couponAmount, double couponPrice,
 			String couponImage) {
@@ -49,7 +53,9 @@ public class Coupon {
 	}
 
 	public void setCouponId(int couponId) {
+
 		this.couponId = couponId;
+
 	}
 
 	public int getCompanyId() {
@@ -77,6 +83,7 @@ public class Coupon {
 	}
 
 	public String getCouponTitle() {
+
 		return couponTitle;
 	}
 
@@ -130,7 +137,7 @@ public class Coupon {
 				+ ", couponCategory=" + couponCategory.name() + ", couponTitle='" + couponTitle + '\''
 				+ ", couponDescription='" + couponDescription + '\'' + ", couponImage='" + couponImage + '\''
 				+ ", couponStartDate=" + couponStartDate + ", couponEndDate=" + couponEndDate + ", couponPrice="
-				+ couponPrice + '}';
+				+ couponPrice + "}\n";
 	}
 
 	@Override

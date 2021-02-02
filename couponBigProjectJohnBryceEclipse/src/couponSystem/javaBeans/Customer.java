@@ -9,6 +9,10 @@ public class Customer {
 	private String customerFirstName, customerLastName, customerEmail, customerPassword;
 	private List<Coupon> customerCoupons = new ArrayList<>();
 
+	public Customer() {
+
+	}
+
 	public Customer(int customerId, String customerFirstName, String customerLastName, String customerEmail,
 			String customerPassword) {
 		setCustomerId(customerId);
@@ -79,6 +83,6 @@ public class Customer {
 	public String toString() {
 		return "Customer{" + "customerId=" + customerId + ", customerFirstName='" + customerFirstName + '\''
 				+ ", customerLastName='" + customerLastName + '\'' + ", customerEmail='" + customerEmail + '\''
-				+ ", customerPassword='" + customerPassword + '\'' + ", customerCoupons=" + customerCoupons + '}';
+				+ ", customerPassword='" + customerPassword + '\'' + ", customerCoupons=" + customerCoupons + "}\n";
 	}
 }

@@ -55,7 +55,8 @@ public class CompanyFacade extends ClientFacade {
 	}
 
 	/**
-	 * add coupon to the Data base if the coupon does not exist for the actual company
+	 * add coupon to the Data base if the coupon does not exist for the actual
+	 * company
 	 *
 	 * @param coupon to add
 	 * @throws CouponSystemException
@@ -83,13 +84,10 @@ public class CompanyFacade extends ClientFacade {
 	 * @throws FacadeException
 	 */
 	public void updateCoupon(Coupon coupon) throws CouponSystemException {
-		if (coupon.getCompanyId() == this.companyID) {
-			couponsDAO.updateCoupon(coupon);
+		
+		couponsDAO.updateCoupon(coupon);
 
-		} else {
-			throw new FacadeException("You have no permission to update this coupon, since the coupon with id: "
-					+ coupon.getCouponId() + " does not belong to this company");
-		}
+		
 	}
 
 	/**
@@ -102,15 +100,14 @@ public class CompanyFacade extends ClientFacade {
 	 */
 
 	public void deleteCoupon(int couponId) throws CouponSystemException {
-		
 
 		Coupon couponToDelete = couponsDAO.getOneCoupon(couponId);
 		if (couponToDelete.getCompanyId() == this.companyID) {
-			if(couponsDAO.isPurchaseExist(couponId)) {
-			couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID, couponId);
+			if (couponsDAO.isPurchaseExist(couponId)) {
+				couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCouponID, couponId);
 			}
 			couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCouponID, couponId);
-		}else {
+		} else {
 			throw new FacadeException("You have no permission to update this coupon, since the coupon with id: "
 					+ couponId + " does not belong to this company");
 		}
@@ -177,5 +174,23 @@ public class CompanyFacade extends ClientFacade {
 		}
 		throw new FacadeException("Get company details in facade failed");
 	}
+
+	/**
+	 * This method get the coupon by id given as parameter and verifies if the coupon belong to this company by his id
+	 * 
+	 * @param couponId coupon to search
+	 * @return specific coupon that belongs to this company
+	 * @throws CouponSystemException if coupon does not belong to this company
+	 */
+	public Coupon getOneCoupon(int couponId)throws CouponSystemException{
+		Coupon couponToReturn=  this.couponsDAO.getOneCoupon(couponId);
+		if(couponToReturn.getCompanyId() == this.companyID) {
+			return couponToReturn;
+		}
+		throw new FacadeException("You have no permission to update this coupon, since the coupon with id: "
+				+ couponId + " does not belong to this company");
+	 
+	}
+	
 
 }

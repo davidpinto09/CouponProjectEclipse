@@ -20,7 +20,6 @@ public class CustomerFacade extends ClientFacade {
 	public CustomerFacade(CompaniesDAO companiesDAO, CustomersDAO customersDAO, CouponsDAO couponsDAO) {
 		super(companiesDAO, customersDAO, couponsDAO);
 
-
 	}
 
 	public int getCustomerId() {
@@ -35,9 +34,10 @@ public class CustomerFacade extends ClientFacade {
 	public boolean login(String email, String password) {
 		boolean isExist = false;
 		try {
-			if (customersDAO.isCustomerExists(email, password)) {
+			if (this.customersDAO.isCustomerExists(email, password)) {
 				isExist = true;
-				for (Customer oneCustomer : customersDAO.getAllCustomers()) {
+			
+				for (Customer oneCustomer :this. customersDAO.getAllCustomers()) {
 
 					if (oneCustomer.getCustomerEmail().equalsIgnoreCase(email)) {
 
@@ -69,12 +69,12 @@ public class CustomerFacade extends ClientFacade {
 	 */
 	public void purchaseCoupon(Coupon coupon) throws CouponSystemException {
 
-		if (!couponsDAO.isPurchaseExist(this.customerId, coupon.getCouponId())) {
+		if (!this.couponsDAO.isPurchaseExist(this.customerId, coupon.getCouponId())) {
 			if (coupon.getCouponAmount() > 0) {
 				if (coupon.getCouponEndDate().isAfter(LocalDate.now())) {
-					couponsDAO.addCouponPurchase(this.customerId, coupon.getCouponId());
+					this.couponsDAO.addCouponPurchase(this.customerId, coupon.getCouponId());
 					coupon.setCouponAmount(coupon.getCouponAmount() - 1);
-					couponsDAO.updateCoupon(coupon);
+					this.couponsDAO.updateCoupon(coupon);
 				} else {
 					throw new FacadeException("The coupon you are trying to purchase has expired");
 				}
@@ -96,7 +96,7 @@ public class CustomerFacade extends ClientFacade {
 	 */
 	public Collection<Coupon> getAllCustomerCoupons() throws CouponSystemException {
 
-		return couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCoupons, this.customerId, null);
+		return this.couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCoupons, this.customerId, null);
 
 	}
 
@@ -112,7 +112,7 @@ public class CustomerFacade extends ClientFacade {
 	 */
 	public Collection<Coupon> getAllCustomerCouponsByCategory(Coupon.Category category) throws CouponSystemException {
 
-		return couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCouponsByCategory, this.customerId,
+		return this.couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCouponsByCategory, this.customerId,
 				category.ordinal() + 1);
 
 	}
@@ -129,7 +129,7 @@ public class CustomerFacade extends ClientFacade {
 	 */
 	public Collection<Coupon> getAllCustomerCouponsByPrice(double maxPrice) throws CouponSystemException {
 
-		return couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCouponsByMaxPrice, this.customerId, maxPrice);
+		return this.couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCouponsByMaxPrice, this.customerId, maxPrice);
 
 	}
 
@@ -144,6 +144,17 @@ public class CustomerFacade extends ClientFacade {
 
 	public Customer getCustomerDetails() throws CouponSystemException {
 
-		return customersDAO.getOneCustomer(this.getCustomerId());
+		return this.customersDAO.getOneCustomer(this.getCustomerId());
 	}
+	/**
+	 * This method get the coupon by id given as parameter 
+	 * 
+	 * @param couponId coupon to search
+	 * @return specific coupon 
+	 * @throws CouponSystemException if coupon does not exists
+	 */
+	public Coupon getOneCoupon(int couponId)throws CouponSystemException{
+		return this.couponsDAO.getOneCoupon(couponId);
+	}
+	
 }

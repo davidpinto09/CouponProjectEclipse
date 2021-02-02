@@ -24,10 +24,12 @@ public class AdminFacade extends ClientFacade {
 
 	@Override
 	public boolean login(String email, String password) {
-		if (email == ADMIN_EMAIL && password == ADMIN_PASSWORD) {
+		if (email.equals(ADMIN_EMAIL) && password.equals(ADMIN_PASSWORD)) {
+
 			return true;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -39,10 +41,10 @@ public class AdminFacade extends ClientFacade {
 	 * @throws FacadeException       facade exception
 	 */
 	public void addCompany(Company company) throws CouponSystemException {
-		if (!companiesDAO.isCompanyInDatabase(company.getCompanyName(), company.getCompanyEmail())) {
-			companiesDAO.addCompany(company);
+		if (!this.companiesDAO.isCompanyInDatabase(company.getCompanyName(), company.getCompanyEmail())) {
+			this.companiesDAO.addCompany(company);
 		} else {
-			throw new FacadeException("Adding company " + company.getCompanyName()
+			throw new FacadeException("Adding company with email " + company.getCompanyEmail()
 					+ " has failed because it already exists in the DataBase.");
 		}
 	}
@@ -59,7 +61,7 @@ public class AdminFacade extends ClientFacade {
 
 	public void updateCompany(Company company) throws CouponSystemException {
 
-		companiesDAO.updateCompany(company);
+		this.companiesDAO.updateCompany(company);
 	}
 
 	/**
@@ -73,12 +75,12 @@ public class AdminFacade extends ClientFacade {
 	 */
 
 	public void deleteCompany(int companyID) throws CouponSystemException {
-	
-	if(couponsDAO.getCouponsBy(CouponsDBDAO.getAllCompanyCoupons, companyID, null).size() != 0) {
-		couponsDAO.deleteCouponPurchaseByCompanyId(companyID);
-		couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCompanyID, companyID);
-	}
-		companiesDAO.deleteCompany(companyID);
+
+		if (this.couponsDAO.getCouponsBy(CouponsDBDAO.getAllCompanyCoupons, companyID, null).size() != 0) {
+			this.couponsDAO.deleteCouponPurchaseByCompanyId(companyID);
+			this.couponsDAO.deleteCoupon(CouponsDBDAO.deleteCouponByCompanyID, companyID);
+		}
+		this.companiesDAO.deleteCompany(companyID);
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class AdminFacade extends ClientFacade {
 	 */
 
 	public Collection<Company> getAllCompanies() throws CouponSystemException {
-		return companiesDAO.getAllCompanies();
+		return this.companiesDAO.getAllCompanies();
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class AdminFacade extends ClientFacade {
 	 */
 
 	public Company getOneCompany(int companyID) throws CouponSystemException {
-		return companiesDAO.getOneCompany(companyID);
+		return this.companiesDAO.getOneCompany(companyID);
 	}
 
 	/**
@@ -117,8 +119,8 @@ public class AdminFacade extends ClientFacade {
 	 * @throws FacadeException       facade exception
 	 */
 	public void addCustomer(Customer customer) throws CouponSystemException {
-		if (!customersDAO.isCustomerInDataBase(customer.getCustomerEmail())) {
-			customersDAO.addCustomer(customer);
+		if (!this.customersDAO.isCustomerInDataBase(customer.getCustomerEmail())) {
+			this.customersDAO.addCustomer(customer);
 		} else {
 			throw new FacadeException("Adding Customer " + customer.getCustomerFirstName() + " "
 					+ customer.getCustomerLastName() + " has failed - customer already exists");
@@ -135,9 +137,9 @@ public class AdminFacade extends ClientFacade {
 	 * @throws FacadeException       if customer does not exist
 	 */
 	public void updateCustomer(Customer customer) throws CouponSystemException {
-	
-			customersDAO.updateCustomer(customer);
-		
+
+		this.customersDAO.updateCustomer(customer);
+
 	}
 
 	/**
@@ -149,10 +151,10 @@ public class AdminFacade extends ClientFacade {
 	 * @throws DAOException          data access object exception
 	 */
 	public void deleteCustomer(int customerID) throws CouponSystemException {
-		if(couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCoupons, customerID, null).size() != 0) {
-		couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCustomerID, customerID);
+		if (this.couponsDAO.getCouponsBy(CouponsDBDAO.getAllCustomerCoupons, customerID, null).size() != 0) {
+			this.couponsDAO.deleteCouponPurchase(CouponsDBDAO.deleteCouponPurchaseByCustomerID, customerID);
 		}
-		customersDAO.deleteCustomer(customerID);
+		this.customersDAO.deleteCustomer(customerID);
 	}
 
 	/**
@@ -164,7 +166,7 @@ public class AdminFacade extends ClientFacade {
 	 * @throws FacadeException
 	 */
 	public Collection<Customer> getAllCustomers() throws CouponSystemException {
-		return customersDAO.getAllCustomers();
+		return this.customersDAO.getAllCustomers();
 	}
 
 	/**
@@ -177,6 +179,7 @@ public class AdminFacade extends ClientFacade {
 	 * @throws FacadeException
 	 */
 	public Customer getOneCustomer(int customerID) throws CouponSystemException {
-		return customersDAO.getOneCustomer(customerID);
+		return this.customersDAO.getOneCustomer(customerID);
 	}
+
 }

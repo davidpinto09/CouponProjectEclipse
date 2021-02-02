@@ -1,5 +1,6 @@
 package couponSystem.jdbc.dao.interfaces;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import couponSystem.exceptions.CouponSystemException;

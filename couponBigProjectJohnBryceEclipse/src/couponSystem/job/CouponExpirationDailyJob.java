@@ -14,9 +14,9 @@ public class CouponExpirationDailyJob implements Runnable {
 	public long dayInMilliseconds = 84600000;
 	private boolean quit;
 
-	public CouponExpirationDailyJob(CouponsDAO couponsDAO, boolean quit) {
-		this.couponsDAO = couponsDAO;
-		this.quit = quit;
+	public CouponExpirationDailyJob() {
+		this.couponsDAO = new CouponsDBDAO();
+		this.quit = false;
 	}
 
 	@Override
@@ -52,6 +52,7 @@ System.out.println("Searching for expired coupons.....");
 
 	public void stop() {
 		System.out.println("The CouponExpirationDailyJob is shooting down");
+		
 		quit = true;
 	}
 }
